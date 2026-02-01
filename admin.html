@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | L'Onde</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#FFFFFF',
+                        surface: '#FAFAFA',
+                        primary: '#111111',
+                        secondary: '#444444',
+                        accent: '#888888',
+                        border: '#DDDDDD',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Pretendard', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .tab-button.active {
+            background-color: #111;
+            color: #fff;
+        }
+
+        .preview-zone {
+            border: 2px dashed #DDD;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .preview-zone:hover {
+            border-color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .preview-zone.dragover {
+            border-color: #111;
+            background-color: #f5f5f5;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-primary font-sans antialiased">
+
+    <!-- Header -->
+    <header
+        class="bg-white border-b border-border py-6 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+        <div>
+            <h1 class="font-serif text-2xl font-bold">Admin Panel</h1>
+            <p class="text-xs text-accent mt-1">L'Onde Restaurant Management</p>
+        </div>
+        <a href="index.html"
+            class="text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors border border-border px-6 py-3 hover:bg-white">
+            ← 메인 페이지로
+        </a>
+    </header>
+
+    <!-- Main Container -->
+    <div class="max-w-screen-xl mx-auto px-6 md:px-12 py-12">
+
+        <!-- Tab Navigation -->
+        <div class="flex gap-2 mb-12 border-b border-border overflow-x-auto">
+            <button
+                class="tab-button px-8 py-4 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap active"
+                data-tab="hero">
+                Hero 섹션
+            </button>
+            <button
+                class="tab-button px-8 py-4 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                data-tab="space">
+                Space 섹션
+            </button>
+            <button
+                class="tab-button px-8 py-4 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                data-tab="menu">
+                Menu 섹션
+            </button>
+            <button
+                class="tab-button px-8 py-4 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                data-tab="origin">
+                Origin 섹션
+            </button>
+            <button
+                class="tab-button px-8 py-4 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                data-tab="reservation">
+                Reservation 섹션
+            </button>
+            <button
+                class="tab-button px-8 py-4 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                data-tab="time">
+                예약 시간 관리
+            </button>
+        </div>
+
+        <!-- Tab 1: Hero Section -->
+        <div id="hero-tab" class="tab-content">
+            <div class="bg-white p-8 md:p-12 border border-border shadow-sm space-y-8">
+                <h2 class="font-serif text-3xl border-b border-border pb-4">Hero Section 관리</h2>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-2">메인 타이틀 (HTML
+                        가능)</label>
+                    <input type="text" id="hero-title"
+                        class="w-full border border-border px-4 py-3 text-lg font-serif focus:outline-none focus:border-black transition-colors">
+                    <p class="text-[10px] text-gray-400 mt-1">예: The Pure &lt;br&gt;&lt;i class="font-light
+                        opacity-90"&gt;Experience&lt;/i&gt;</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-2">서브 텍스트</label>
+                    <input type="text" id="hero-subtitle"
+                        class="w-full border border-border px-4 py-3 focus:outline-none focus:border-black transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-3">Hero 배경 이미지</label>
+                    <div class="preview-zone p-6 rounded bg-gray-50 text-center" id="hero-image-zone">
+                        <input type="file" id="hero-image-input" accept="image/*" class="hidden">
+                        <img id="hero-image-preview" src="" class="image-preview mx-auto mb-3 hidden">
+                        <p class="text-sm text-gray-400 mb-2">이미지를 클릭하거나 드래그하여 업로드</p>
+                        <div class="flex gap-3 justify-center">
+                            <button type="button" onclick="document.getElementById('hero-image-input').click()"
+                                class="bg-primary text-white px-6 py-2 text-xs uppercase tracking-wider hover:bg-secondary transition-colors">
+                                파일 선택
+                            </button>
+                            <button type="button" onclick="deleteImage('hero')"
+                                class="bg-red-600 text-white px-6 py-2 text-xs uppercase tracking-wider hover:bg-red-700 transition-colors">
+                                🗑️ 삭제
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-3">* Hero 고품질: 최대 1200px, WebP/JPEG 75% 품질</p>
+                    </div>
+                </div>
+
+                <button onclick="saveSection('hero')"
+                    class="w-full bg-primary text-white py-4 text-xs uppercase tracking-[0.25em] font-bold hover:bg-secondary transition-colors">
+                    Hero 섹션 저장
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 2: Space Section -->
+        <div id="space-tab" class="tab-content hidden">
+            <div class="bg-white p-8 md:p-12 border border-border shadow-sm space-y-8">
+                <h2 class="font-serif text-3xl border-b border-border pb-4">Space Section 관리</h2>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-2">섹션 제목 (HTML
+                        가능)</label>
+                    <input type="text" id="space-title"
+                        class="w-full border border-border px-4 py-3 text-lg font-serif focus:outline-none focus:border-black transition-colors">
+                    <p class="text-[10px] text-gray-400 mt-1">예: Visual &lt;br&gt;Silence</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-2">설명 문구</label>
+                    <textarea id="space-description" rows="5"
+                        class="w-full border border-border px-4 py-3 text-sm leading-relaxed focus:outline-none focus:border-black transition-colors"></textarea>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">갤러리 이미지 (3개)</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-2">이미지 1</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="space-img-1-zone">
+                                <input type="file" id="space-img-1-input" accept="image/*" class="hidden">
+                                <img id="space-img-1-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button" onclick="document.getElementById('space-img-1-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('space-1')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-2">이미지 2</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="space-img-2-zone">
+                                <input type="file" id="space-img-2-input" accept="image/*" class="hidden">
+                                <img id="space-img-2-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button" onclick="document.getElementById('space-img-2-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('space-2')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-2">이미지 3</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="space-img-3-zone">
+                                <input type="file" id="space-img-3-input" accept="image/*" class="hidden">
+                                <img id="space-img-3-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button" onclick="document.getElementById('space-img-3-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('space-3')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="saveSection('space')"
+                    class="w-full bg-primary text-white py-4 text-xs uppercase tracking-[0.25em] font-bold hover:bg-secondary transition-colors">
+                    Space 섹션 저장
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 3: Menu Section -->
+        <div id="menu-tab" class="tab-content hidden">
+            <div class="bg-white p-8 md:p-12 border border-border shadow-sm space-y-8">
+                <h2 class="font-serif text-3xl border-b border-border pb-4">Menu Section 관리</h2>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-2">섹션 제목</label>
+                    <input type="text" id="menu-title"
+                        class="w-full border border-border px-4 py-3 text-lg font-serif focus:outline-none focus:border-black transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-2">섹션 서브텍스트</label>
+                    <input type="text" id="menu-subtitle"
+                        class="w-full border border-border px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors">
+                </div>
+
+                <div class="border-t border-border pt-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold uppercase tracking-wider text-accent">메뉴 아이템 관리</h3>
+                        <button onclick="addMenuItem()"
+                            class="bg-green-600 text-white px-6 py-3 text-xs uppercase tracking-wider hover:bg-green-700 transition-colors rounded">
+                            + 메뉴 추가
+                        </button>
+                    </div>
+
+                    <div class="space-y-6" id="menu-items-container">
+                        <!-- Menu items will be dynamically generated -->
+                    </div>
+                </div>
+
+                <button onclick="saveSection('menu')"
+                    class="w-full bg-primary text-white py-4 text-xs uppercase tracking-[0.25em] font-bold hover:bg-secondary transition-colors">
+                    Menu 섹션 저장
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 3.5: Origin Section -->
+        <div id="origin-tab" class="tab-content hidden">
+            <div class="bg-white p-8 md:p-12 border border-border shadow-sm space-y-8">
+                <h2 class="font-serif text-3xl border-b border-border pb-4">Origin Section 관리</h2>
+                <p class="text-xs text-gray-500 mb-4">각 이야기에 맞는 이미지를 업로드하세요. (권장: 고해상도, 4:5 또는 1:1 비율)</p>
+
+                <!-- 1. The Earth (Farm) -->
+                <div class="space-y-4 border-b border-border pb-8">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">1. The Earth (Farm)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">메인 이미지 (Farm)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-farm-zone">
+                                <input type="file" id="origin-farm-input" accept="image/*" class="hidden">
+                                <img id="origin-farm-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button" onclick="document.getElementById('origin-farm-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-farm')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. The Ocean (Seafood) -->
+                <div class="space-y-4 border-b border-border pb-8">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">2. The Ocean (Seafood)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">메인 이미지 (Seafood)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-seafoodMain-zone">
+                                <input type="file" id="origin-seafoodMain-input" accept="image/*" class="hidden">
+                                <img id="origin-seafoodMain-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button"
+                                        onclick="document.getElementById('origin-seafoodMain-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-seafoodMain')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">제주 (Jeju)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-jeju-zone">
+                                <input type="file" id="origin-jeju-input" accept="image/*" class="hidden">
+                                <img id="origin-jeju-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button" onclick="document.getElementById('origin-jeju-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-jeju')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">통영 (Tongyeong)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-tongyeong-zone">
+                                <input type="file" id="origin-tongyeong-input" accept="image/*" class="hidden">
+                                <img id="origin-tongyeong-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button"
+                                        onclick="document.getElementById('origin-tongyeong-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-tongyeong')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Artisan (Ingredients) -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">3. Artisan (Ingredients)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">트러플 (Truffle)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-truffle-zone">
+                                <input type="file" id="origin-truffle-input" accept="image/*" class="hidden">
+                                <img id="origin-truffle-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button"
+                                        onclick="document.getElementById('origin-truffle-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-truffle')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">캐비어 (Caviar)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-caviar-zone">
+                                <input type="file" id="origin-caviar-input" accept="image/*" class="hidden">
+                                <img id="origin-caviar-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button"
+                                        onclick="document.getElementById('origin-caviar-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-caviar')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">한우 (Hanwoo)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-hanwoo-zone">
+                                <input type="file" id="origin-hanwoo-input" accept="image/*" class="hidden">
+                                <img id="origin-hanwoo-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button"
+                                        onclick="document.getElementById('origin-hanwoo-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-hanwoo')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-700 font-bold mb-2">우니 (Uni)</label>
+                            <div class="preview-zone p-4 rounded bg-gray-50 text-center" id="origin-uni-zone">
+                                <input type="file" id="origin-uni-input" accept="image/*" class="hidden">
+                                <img id="origin-uni-preview" src="" class="image-preview mx-auto mb-2 hidden">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button" onclick="document.getElementById('origin-uni-input').click()"
+                                        class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary">선택</button>
+                                    <button type="button" onclick="deleteImage('origin-uni')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="saveSection('origin')"
+                    class="w-full bg-primary text-white py-4 text-xs uppercase tracking-[0.25em] font-bold hover:bg-secondary transition-colors">
+                    Origin 섹션 저장
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 4: Reservation Section -->
+        <div id="reservation-tab" class="tab-content hidden">
+            <div class="bg-white p-8 md:p-12 border border-border shadow-sm space-y-8">
+                <h2 class="font-serif text-3xl border-b border-border pb-4">Reservation Section 관리</h2>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-accent mb-3">예약 섹션 배경
+                        이미지</label>
+                    <div class="preview-zone p-6 rounded bg-gray-50 text-center" id="reservation-image-zone">
+                        <input type="file" id="reservation-image-input" accept="image/*" class="hidden">
+                        <img id="reservation-image-preview" src="" class="image-preview mx-auto mb-3 hidden">
+                        <p class="text-sm text-gray-400 mb-2">이미지를 클릭하거나 드래그하여 업로드</p>
+                        <div class="flex gap-3 justify-center">
+                            <button type="button" onclick="document.getElementById('reservation-image-input').click()"
+                                class="bg-primary text-white px-6 py-2 text-xs uppercase tracking-wider hover:bg-secondary transition-colors">
+                                파일 선택
+                            </button>
+                            <button type="button" onclick="deleteImage('reservation')"
+                                class="bg-red-600 text-white px-6 py-2 text-xs uppercase tracking-wider hover:bg-red-700 transition-colors">
+                                🗑️ 삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="saveSection('reservation')"
+                    class="w-full bg-primary text-white py-4 text-xs uppercase tracking-[0.25em] font-bold hover:bg-secondary transition-colors">
+                    Reservation 섹션 저장
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 5: Time Management -->
+        <div id="time-tab" class="tab-content hidden">
+            <div class="bg-white p-8 md:p-12 border border-border shadow-sm space-y-8">
+
+                <h2 class="font-serif text-3xl border-b border-border pb-4">예약 시간 관리</h2>
+
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">현재 예약 가능 시간</h3>
+                    <div id="time-slots-list" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <!-- Time slots will be dynamically generated -->
+                    </div>
+                </div>
+
+                <div class="border-t border-border pt-8 space-y-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">새 시간대 추가</h3>
+                    <div class="flex gap-3">
+                        <input type="time" id="new-time-input"
+                            class="flex-1 border border-border px-4 py-3 focus:outline-none focus:border-black transition-colors">
+                        <button onclick="addTimeSlot()"
+                            class="bg-primary text-white px-8 py-3 text-xs uppercase tracking-wider hover:bg-secondary transition-colors">
+                            추가
+                        </button>
+                    </div>
+                </div>
+
+                <div class="border-t border-border pt-8 space-y-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent">예약 불가 시간 설정</h3>
+                    <p class="text-xs text-gray-500">날짜별로 특정 시간대를 비활성화할 수 있습니다.</p>
+
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <input type="date" id="disable-date"
+                                class="flex-1 border border-border px-4 py-3 focus:outline-none focus:border-black transition-colors">
+                            <select id="disable-time"
+                                class="flex-1 border border-border px-4 py-3 focus:outline-none focus:border-black transition-colors">
+                                <option value="">시간 선택</option>
+                            </select>
+                            <button onclick="disableTimeSlot()"
+                                class="bg-red-600 text-white px-8 py-3 text-xs uppercase tracking-wider hover:bg-red-700 transition-colors">
+                                비활성화
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="disabled-slots-list" class="mt-6 space-y-2">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase">비활성화된 예약 시간</h4>
+                        <div id="disabled-list-content" class="space-y-2">
+                            <!-- Disabled slots will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="saveSection('time')"
+                    class="w-full bg-primary text-white py-4 text-xs uppercase tracking-[0.25em] font-bold hover:bg-secondary transition-colors">
+                    예약 시간 저장
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="./src/admin.js"></script>
+
+</body>
+
+</html>
